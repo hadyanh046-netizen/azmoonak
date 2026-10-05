@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="آزمونک آنلاین پایه‌های اول تا دوازدهم؛ تست‌های چهارگزینه‌ای با سوالات تصادفی برای دانش‌آموزان.">
+<meta name="robots" content="index,follow">
+<title>آزمونک | تست آنلاین پایه‌های ۱ تا ۱۲</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Tahoma,Arial,sans-serif;background:linear-gradient(135deg,#07111f,#172554,#312e81);color:#fff;min-height:100vh}
+.wrap{max-width:1050px;margin:auto;padding:18px}.hero{text-align:center;padding:28px 5px}.hero h1{font-size:36px;margin:5px}.hero p{color:#cbd5e1}.card{background:#ffffff12;border:1px solid #ffffff20;border-radius:24px;padding:22px;box-shadow:0 15px 50px #0005;margin-bottom:18px}
+h2{margin-top:0}.grades{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.grade{border:0;border-radius:16px;padding:19px 8px;font-size:18px;font-weight:bold;background:#fff;color:#111827;cursor:pointer}.grade:hover{transform:translateY(-2px)}
+.subjects{display:flex;gap:9px;flex-wrap:wrap}.subject,.back{border:1px solid #64748b;background:#0f172a;color:#fff;border-radius:12px;padding:10px 16px;cursor:pointer}.subject.active{background:#7c3aed}
+.question{font-size:20px;line-height:1.8;margin:24px 0 10px}.options{display:grid;gap:9px}.option{border:1px solid #64748b;background:#111827;color:white;border-radius:12px;padding:13px;text-align:right;font-size:16px;cursor:pointer}.option.selected{outline:3px solid #38bdf8;background:#172554}
+.main{border:0;background:#22c55e;color:#052e16;border-radius:12px;padding:13px 20px;font-size:17px;font-weight:bold;cursor:pointer;margin-top:20px}.hidden{display:none}.result{text-align:center;font-size:24px;padding:20px}.muted{color:#cbd5e1;font-size:14px}
+@media(max-width:650px){.grades{grid-template-columns:repeat(3,1fr)}.hero h1{font-size:28px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<section class="hero">
+<h1>🎓 آزمونک</h1>
+<p>تست آنلاین پایه‌های ۱ تا ۱۲ با سوالات تصادفی</p>
+</section>
+
+<section id="home" class="card">
+<h2>پایه تحصیلی را انتخاب کن</h2>
+<div id="grades" class="grades"></div>
+</section>
+
+<section id="test" class="card hidden">
+<button class="back" onclick="goHome()">← انتخاب پایه</button>
+<h2 id="title"></h2>
+<div id="subjects" class="subjects"></div>
+<div id="quiz"></div>
+</section>
+</div>
+
+<script>
+const subjects=["ریاضی","علوم","فارسی","انگلیسی"];
+
+/* بانک سوال بزرگ‌تر. برای هر پایه می‌توان سؤال‌های واقعی همان پایه را اضافه کرد. */
+const bank={
+"ریاضی":[
+["حاصل ۷ + ۵ چند است؟",["۱۰","۱۱","۱۲","۱۳"],2],
+["حاصل ۳ × ۴ چند است؟",["۷","۱۲","۱۴","۱۶"],1],
+["حاصل ۲۰ - ۸ چند است؟",["۱۰","۱۱","۱۲","۱۳"],2],
+["کدام عدد بزرگ‌تر است؟",["۱۵","۹","۱۲","۷"],0],
+["نصف ۱۰ چند است؟",["۲","۵","۸","۱۰"],1],
+["حاصل ۶ + ۹ چند است؟",["۱۳","۱۴","۱۵","۱۶"],2],
+["حاصل ۵ × ۵ چند است؟",["۱۵","۲۰","۲۵","۳۰"],2],
+["یک‌چهارم ۲۰ چند است؟",["۴","۵","۶","۱۰"],1]
+],
+"علوم":[
+["کدام مورد یک سیاره است؟",["خورشید","زمین","ماه","ستاره"],1],
+["آب در دمای معمولی چه حالتی دارد؟",["جامد","مایع","گاز","پلاسما"],1],
+["گیاه برای رشد به کدام مورد نیاز دارد؟",["نور","سنگ","پلاستیک","شیشه"],0],
+["کدام مورد منبع نور طبیعی است؟",["لامپ","خورشید","چراغ قوه","تلویزیون"],1],
+["کدام اندام برای تنفس انسان مهم است؟",["قلب","ریه","معده","استخوان"],1],
+["آب در اثر گرما می‌تواند به چه چیزی تبدیل شود؟",["بخار","سنگ","خاک","چوب"],0],
+["کدام مورد جاندار است؟",["درخت","مداد","صندلی","سنگ"],0],
+["زمین به دور چه چیزی می‌گردد؟",["ماه","خورشید","مریخ","ابر"],1]
+],
+"فارسی":[
+["کدام واژه نام یک حیوان است؟",["کتاب","مداد","گربه","خانه"],2],
+["کدام مورد یک جمله است؟",["کتاب","هوا سرد است.","مداد آبی","مدرسه"],1],
+["مخالف «بزرگ» چیست؟",["زیبا","کوچک","سریع","بلند"],1],
+["هم‌معنی «خوشحال» کدام است؟",["غمگین","شاد","خسته","ترسیده"],1],
+["کدام واژه جمع است؟",["دانش‌آموز","کتاب‌ها","مداد","خانه"],1],
+["«آسمان» چند بخش دارد؟",["۱","۲","۳","۴"],1],
+["کدام واژه درست نوشته شده است؟",["مسول","مسئول","مسعول","مسءول"],1],
+["کدام کلمه نام یک مکان است؟",["مدرسه","دویدن","زیبا","آبی"],0]
+],
+"انگلیسی":[
+["معنی Apple چیست؟",["کتاب","سیب","مدرسه","آب"],1],
+["کدام واژه به معنی «سلام» است؟",["Bye","Hello","Book","Thanks"],1],
+["معنی Book چیست؟",["کتاب","خانه","ماشین","دوست"],0],
+["معنی School چیست؟",["مدرسه","سیب","آب","دوست"],0],
+["کدام کلمه به معنی «خداحافظ» است؟",["Hello","Bye","Book","Pen"],1],
+["معنی Cat چیست؟",["سگ","گربه","پرنده","ماهی"],1],
+["کدام کلمه به معنی «آب» است؟",["Water","Book","House","Tree"],0],
+["معنی Friend چیست؟",["معلم","دوست","دانش‌آموز","خانه"],1]
+]
+};
+
+let grade=1,subject="ریاضی",answers={},quizQuestions=[];
+
+for(let i=1;i<=12;i++){
+ const b=document.createElement("button");
+ b.className="grade";b.textContent="پایه "+i;b.onclick=()=>openGrade(i);
+ document.getElementById("grades").appendChild(b);
+}
+
+function shuffle(a){
+ a=[...a];
+ for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}
+ return a;
+}
+
+function openGrade(g){
+ grade=g;
+ document.getElementById("home").classList.add("hidden");
+ document.getElementById("test").classList.remove("hidden");
+ document.getElementById("title").textContent="آزمون پایه "+g;
+ const s=document.getElementById("subjects");s.innerHTML="";
+ subjects.forEach((x,i)=>{
+  const b=document.createElement("button");b.className="subject"+(i===0?" active":"");b.textContent=x;
+  b.onclick=()=>{subject=x;[...s.children].forEach(z=>z.classList.remove("active"));b.classList.add("active");newQuiz()};
+  s.appendChild(b);
+ });
+ subject="ریاضی";newQuiz();
+}
+
+function newQuiz(){
+ answers={};
+ /* هر بار ورود/شروع دوباره، 5 سوال متفاوت انتخاب می‌شود */
+ quizQuestions=shuffle(bank[subject]).slice(0,5);
+ render();
+}
+
+function render(){
+ const q=document.getElementById("quiz");q.innerHTML="";
+ quizQuestions.forEach((item,i)=>{
+  const choices=shuffle(item[1].map((text,index)=>({text,index})));
+  const box=document.createElement("div");
+  box.innerHTML=`<div class="question">${i+1}. ${item[0]}</div>`;
+  const opts=document.createElement("div");opts.className="options";
+  choices.forEach(c=>{
+   const b=document.createElement("button");b.className="option";b.textContent=c.text;
+   b.onclick=()=>{
+    answers[i]=c.index;
+    [...opts.children].forEach(x=>x.classList.remove("selected"));
+    b.classList.add("selected");
+   };
+   opts.appendChild(b);
+  });
+  box.appendChild(opts);q.appendChild(box);
+ });
+ const submit=document.createElement("button");submit.className="main";submit.textContent="ثبت پاسخ‌ها";
+ submit.onclick=showResult;q.appendChild(submit);
+}
+
+function showResult(){
+ if(Object.keys(answers).length<quizQuestions.length){alert("لطفاً به همه سؤال‌ها پاسخ بده.");return}
+ let score=0;quizQuestions.forEach((x,i)=>{if(answers[i]===x[2])score++});
+ document.getElementById("quiz").innerHTML=
+ `<div class="result">🎉 نتیجه آزمون<br><strong>${score} از ${quizQuestions.length}</strong>
+ <div class="muted">پایه ${grade} | ${subject}</div>
+ <button class="main" onclick="newQuiz()">🔄 آزمون جدید با سوالات جدید</button></div>`;
+}
+
+function goHome(){
+ document.getElementById("test").classList.add("hidden");
+ document.getElementById("home").classList.remove("hidden");
+}
+</script>
+</body>
+</html>
